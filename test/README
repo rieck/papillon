@@ -1,0 +1,31 @@
+
+ * Papillon - Solaris security module -  http://www.roqe.org/papillon
+ * Copyright (c) 2000-2003 Konrad Rieck <kr@roqe.org>
+ * All rights reserved.
+ 
+ This directory contains C programs and a shell script to test the
+ functionality of the Papillon module. Follow the Papillon documentation in
+ order to compile and install the security module. Enable all protections
+ and features of the module.
+
+ Compile the C test programs. Maybe it's necessary to modify the Makefile,
+ but usually you won't have to change anything. A Sun C compiler or a GCC
+ 3.x is required for compilation.
+
+    # make 
+
+ Finally launch the test shell script and check if all features show the
+ correct behavior. 
+
+    # ./test.sh
+   
+ By changing the protections and features of the Papillon module using the 
+ tool "papctl", you can do further tests with the provided shell script, 
+ e.g. 
+    
+    # papctl -s r=off
+    # ./test.sh
+
+ In the above case the restricted proc should be disabled.
+
+ 

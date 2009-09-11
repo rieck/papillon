@@ -1,0 +1,169 @@
+#!/bin/sh
+
+TMPPATH=/tmp
+
+INITIALS="RQ"
+HOTLINE="Packaged by Konrad Rieck <kr@roqe.org>"
+VENDOR="See copyright files inside package."
+CATEGORY="Application"
+ROOT=""
+NAME=""
+VERSION="1"
+SUMMARY=""
+DESC="No information"
+
+usage() {
+  echo "usage: mkpkg [-C category] [-t tmppath] [-I intials] [-v version] "
+  echo "             [-a arch] -r root -n name"
+  exit 0 
+}
+
+make_pkg_name() {
+   name=$1
+   summary=`echo $* | cut -d " " -f2-`   
+   name_len=`echo "$name\c" | wc -c`
+   summary_len=`echo "$summary\c" | wc -c`
+   desired_len=`echo 50 - $name_len - 3 | bc`
+   if [ $summary_len -gt $desired_len ] ; then      
+      desired_len=`echo $desired_len - 3 | bc`
+      summary=`echo $summary | cut -b1-$desired_len`
+      summary="$summary..."
+   fi
+   echo "$summary ($name)"
+}
+
+make_pkg_pkg() { 
+   arg=`echo $1 | tr -s '[:upper:]' '[:lower:]'`
+   arg=`echo $arg | tr -d '[:punct:]'`
+
+   init_len=`echo "$INITIALS\c" | wc -c`
+   rest_len=`echo "9 - $init_len" | bc`
+
+   arg=`echo $arg | sed s/gnome/gn/g`
+   arg=`echo $arg | sed s/lib/l/g`
+   arg=`echo $arg | sed s/progs/p/g`
+   arg=`echo $arg | sed s/devel/d/g`
+
+   arg_len=`echo "$arg\c" | wc -c`
+   short_len=`echo $rest_len - 4 | bc`   
+
+   if [ $arg_len -gt $short_len ] ; then
+
+      rest_first=`echo $arg | cut -b1`
+      rest_rest=`echo $arg | cut -b2-`
+      rest_rest=`echo $rest_rest | tr -d '[aeiou]'`
+   
+      rest_rest_len=`echo "$rest_rest\c" | wc -c`
+      complete_len=`echo $rest_rest_len + 1 | bc`
+
+      if [ $complete_len -gt $rest_len ] ; then
+         rest_last=`echo $rest_rest | cut -b $rest_rest_len`
+         rest_middle_len=`echo $rest_len - 2 | bc` 
+         rest_rest=`echo $rest_rest | cut -b1-$rest_middle_len`
+         rest_rest="$rest_rest$rest_last"
+      fi
+   else
+      rest_first=""
+      rest_rest=$arg 
+   fi
+  
+   echo "$INITIALS$rest_first$rest_rest"
+}
+
+make_pkg_desc() {
+   desc=$*
+   desc_len=`echo "$desc\c" | wc -c`   
+   if [ $desc_len -gt 255 ] ; then
+      desc=`echo $desc | cut -b1-252`
+      desc="$desc..." 
+   fi
+
+   echo $desc
+}
+
+set - - `getopt a:n:r:t:v:C:D:I:S: $*`     
+if [ $? != 0 ]; then
+   usage
+fi
+
+for i in $*; do
+   case $i in
+      -a)  	    RARCH=$3; shift 2;;	
+      -r)           ROOT=$3; shift 2;;
+      -n)           NAME=$3; shift 2;;
+      -v)           VERSION=$3; shift 2;;
+      -t)           TMPPATH=$3; shift 2;;
+      -V)           VENDOR=$3; shift 2;;
+      -C)           CATEGORY=$3; shift 2;;
+      -D)           DESC=`cat $3`; shift 2;;
+      -I)           INITIALS=$3; shift 2;;
+      -S)	    SUMMARY=`cat $3`; shift 2;;
+   esac
+done
+
+if [ -z "$ROOT" -o -z "$NAME" ]; then
+   usage
+fi 
+
+if [ -z "$DESC" ] ; then
+   echo "Enter a description for the package:"
+   read DESC
+fi
+
+if [ -z "$SUMMARY" ] ; then
+   echo "Enter a summary (one line) for the package:"
+   read SUMMARY
+fi
+
+pkg_pkg=`make_pkg_pkg $NAME`
+pkg_name=`make_pkg_name $NAME $SUMMARY`
+pkg_desc=`make_pkg_desc $DESC`
+pkg_version=$VERSION
+
+if [ -z "$RARCH" ] ; then 
+   pkg_arch=`uname -p`
+else
+   pkg_arch=$RARCH
+fi
+
+pkg_category=$CATEGORY
+pkg_hotline=$HOTLINE
+pkg_vendor=$VENDOR
+
+echo "---"
+echo "Package: $pkg_pkg"
+echo "         Name:   $pkg_name"
+echo "      Version:   $pkg_version"
+echo " Architecture:   $pkg_arch"
+echo "     Category:   $pkg_category"
+echo "      Hotline:   $pkg_hotline"
+echo "       Vendor:   $pkg_vendor"
+echo
+echo "$pkg_desc"
+echo "---"
+echo 
+echo "Are the information above correct [y/n]: \c"
+read a
+
+if [ $a != "y" ] ; then 
+   exit
+fi
+
+echo "PKG=\"$pkg_pkg\"" > $TMPPATH/pkginfo
+echo "NAME=\"$pkg_name\"" >> $TMPPATH/pkginfo
+echo "ARCH=\"$pkg_arch\"" >> $TMPPATH/pkginfo
+echo "VERSION=\"$pkg_version\"" >> $TMPPATH/pkginfo
+echo "HOTLINE=\"$pkg_hotline\"" >> $TMPPATH/pkginfo
+echo "VENDOR=\"$pkg_vendor\"" >> $TMPPATH/pkginfo
+echo "CATEGORY=\"$pkg_category\"" >> $TMPPATH/pkginfo
+echo "DESC=\"$pkg_desc\"" >> $TMPPATH/pkginfo
+
+pkgproto $ROOT=/ > $TMPPATH/prototype
+echo "i pkginfo=$TMPPATH/pkginfo" >> $TMPPATH/prototype
+
+pkgmk -o -f $TMPPATH/prototype -d $TMPPATH $pkg_pkg
+
+pkgtrans -s $TMPPATH $TMPPATH/$NAME-$VERSION-$pkg_arch.pkg $pkg_pkg
+gzip $TMPPATH/$NAME-$VERSION-$pkg_arch.pkg
+rm -rf $TMPPATH/$pkg_pkg $TMPPATH/pkginfo $TMPPATH/prototype
+

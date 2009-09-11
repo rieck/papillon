@@ -1,0 +1,34 @@
+#!/bin/sh 
+VERSION=`cat VERSION`
+SUBDIRS="src test"
+TMPDIR=/tmp
+MYPWD=`pwd`
+
+echo $MYPWD
+
+for dir in $SUBDIRS ; do
+   (cd $dir ; make clean ; cd ..)
+done
+
+(cd doc ; gmake distclean pdf ; cd ..)
+
+S_FILES="src/*.c src/*.h src/Makefile src/init.papillon src/gcc-sane"
+D_FILES="doc/papillon.pdf"
+T_FILES="test/*.c test/Makefile test/test.sh"
+FILES="VERSION LICENSE README CHANGES CERTS"
+
+rm -rf $TMPDIR/papillon-$VERSION
+mkdir -p $TMPDIR/papillon-$VERSION/src
+mkdir -p $TMPDIR/papillon-$VERSION/doc
+mkdir -p $TMPDIR/papillon-$VERSION/test
+
+cp -R $S_FILES $TMPDIR/papillon-$VERSION/src
+cp -R $D_FILES $TMPDIR/papillon-$VERSION/doc
+cp -R $T_FILES $TMPDIR/papillon-$VERSION/test
+cp -R $FILES $TMPDIR/papillon-$VERSION
+
+cd $TMPDIR
+tar cvf $MYPWD/../papillon-$VERSION.tar papillon-$VERSION
+gzip $MYPWD/../papillon-$VERSION.tar
+cd $MYPWD
+rm -rf $TMPDIR/papillon-$VERSION

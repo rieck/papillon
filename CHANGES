@@ -1,0 +1,71 @@
+0.5.4   o  Support for Solaris 10 and OpenSolaris (20060821).
+           Thanks to Jakub Wartak for providing the necessary fixes.
+
+0.5.3   o  Casper Dik noted that bug 1170077 isn't a bug anymore
+        o  Fixed a security problem with copyinstr() calls
+        o  Added rudimentary support for a setuid execution protection
+           white-list
+
+0.5.2   o  Added GCC sanity check 
+        o  Fixed bug in hardlink protection on Solaris 8 
+           Thanks to Cedric Marsot and John Cartwright
+        o  Fixed a memory problem caused by the mysterious bug 1170077
+        o  Moved init script to runlevel 2 (Temporary fix for a problem
+           reported by Martin Preen)
+
+0.5.1   o  Corrected a reference in the documentation
+
+0.5.0   o  Added SUID execution protecion
+        o  Support for Solaris OE 9
+           Thanks to Casper Dik for GCC header tips.
+        o  Fixed a dependancy problem when disabling modhiding
+        o  Improved and generalized logging 
+        o  Rewrote most of the documentation
+
+0.4.3   o  Fixed wrong path to linker
+        o  Adjusted compilation flags for generic compilation 
+           Thanks to Adam Morley
+        o  Fixed missing memset() symbol when using gcc v3.
+        o  Added support for 64 bit compilation using gcc v3.
+        o  The module is considered to be stable, the Beta flag 
+           has been removed from the version
+
+0.4.2b  o  Fixed output of protections when warning only
+        o  Added the ability to grant read permission to the /proc to 
+           a group (SUSER_GID)
+
+0.4.1b  o  Compilation and installation process automatically detects 
+           system's bit width. 
+        o  Sparc package contains both 32 and 64 bit module
+        o  The module is now running stable for over 3 months 
+           (alpha -> beta)
+        o  Small improvements in performance and stability
+        o  Documentation available as PDF including hyperlinks, thumbnails
+           and internal booksmarks.
+        o  New logo
+
+0.4.0a  o  New protection: Chroot Protection
+           Modified chroot protection. Deny calls to
+           - chroot()
+           - mount()
+           - mknod(), xmknod() if request for block/char dev creation
+           - modctl(), if request for loading a module
+           - chmod(), if mode equals +s (both sgid and suid)
+           in a chroot environment.
+        o  Reorganized the complete syscall32 redirection
+        o  Fixed a typo in papctl.c. 
+        o  Fixed the nasty readdir() bug on 64 bit systems. (int64_t)
+        o  Fixed pseudo promiscuous flag on 64 bit systems. (strbuf32)
+
+0.3.5a  o  Integrated the chroot() protection Heiko Krupp contributed. 
+           Thanks for the code. 
+
+0.3.4a  o  Fixed a security problem in comm.c 
+        o  Added a note to the documentation about the module locking if
+           unloading and volmgt is on.
+        o  Modhiding enabled on 64 bit systems EXCEPT readdir() interception
+           *sigh*. Need to fix this soon. 
+
+0.3.3a
+        o  First public alpha release.
+

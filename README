@@ -1,0 +1,15 @@
+
+ * Papillon - Solaris security module -  http://www.roqe.org/papillon
+ * Copyright (c) 2000-2003,2006 Konrad Rieck <kr@roqe.org>
+ * All rights reserved.
+
+ A documentation is available in the doc/ directory:
+
+     doc/papillon.pdf		Portable Document (PDF)
+
+ The documentation covers all important aspects of the Papillon security
+ module including a general description of the provided functionality
+ and information for compiling and installing the module on a Solaris 
+ system.
+
+  

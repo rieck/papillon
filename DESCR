@@ -1,0 +1,1 @@
+Papillon is a kernel module that provides security mechanisms and protections that improve the overall security of the system. The module addresses common Unix security issues and has been influenced by the Openwall and HAP Linux patches.

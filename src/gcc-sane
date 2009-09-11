@@ -1,0 +1,49 @@
+#!/bin/sh
+#
+# Papillon - Solaris security module - http://www.roqe.org/papillon
+# Copyright (c) 2000-2003,2006 Konrad Rieck <kr@roqe.org>
+# All rights reserved.
+#
+# $Id: gcc-sane,v 1.4 2003/04/25 12:49:23 kr Exp $
+#
+
+if [ -z "$*" ] ; then
+   echo "Usage: gcc-sane <path-to-gcc>"
+   exit 1
+fi
+
+GCC=$1
+
+if [ -z "`echo $GCC | grep gcc`" ] ; then
+   echo " * Warning: no gcc specified."
+   exit 0
+fi
+
+GCC=`which $GCC`
+
+if [ -n "` echo $GCC | grep 'no gcc'`" ] ; then
+   echo " * Error: no gcc in path environment."
+   exit 1
+fi
+
+SOL_REL=solaris`uname -r | sed s/5/2/g`
+GCC_REL=`$GCC -v 2>&1 | head -1 | awk '{print $4}'`
+GCC_VER=`gcc --version | head -1`
+
+#if [ -n "`echo $GCC_REL | grep $SOL_REL`" ] ; then
+#   echo " * Info: gcc release valid for $SOL_REL"
+#else
+#   echo " * Error: gcc release invalid for $SOL_REL."
+#   echo "          $GCC_REL"
+#   echo "          gcc release for $SOL_REL required."
+#   exit 1
+#fi
+
+if [ -n "`echo $GCC_VER | grep ' 3\.'`" -o \
+     -n "`echo $GCC_VER | grep '^3\.'`" ] ; then
+   echo " * Info: gcc version valid ($GCC_VER)"
+else
+   echo " * Error: gcc version invalid ($GCC_VER)."
+   echo "          version 3.x or above is required."
+   exit 1
+fi

@@ -1,0 +1,38 @@
+
+VERSION=`cat VERSION`
+FAKE=/tmp/fake-root
+BIN_DIRS="/tmp/fake/sparc"
+PWD=`pwd`
+
+rm -rf $FAKE
+mkdir -p $FAKE
+
+for dir in $BIN_DIRS ; do 
+   rm -rf $dir
+   mkdir -p $dir
+
+   cd src 
+   make install PREFIX=$dir
+   cd ..
+
+   arch=`basename $dir`
+   if [ "$arch" != "i386" ] ; then
+      realarch="sparc"
+   else
+      # Hey Sun managers, do you see this? ...I haven't killed this line,
+      # so when necessary switch the IA Solaris port back on.
+      realarch="i386"
+   fi
+
+   rm -rf $FAKE
+   mkdir -p $FAKE
+
+   ./mkpkg -v $VERSION -a $realarch -n Papillon -r $dir \
+       -D DESCR -S SUMMARY -t $FAKE
+
+   mv $FAKE/Papillon-$VERSION-$realarch.pkg.gz \
+      $PWD/../papillon-$VERSION-$arch.pkg.gz
+
+   rm -f $FAKE/Papillon-$VERSION-$realarch.pkg.gz
+
+done

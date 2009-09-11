@@ -1,0 +1,42 @@
+#!/sbin/sh
+#
+# Papillon - Solaris security module - http://www.roqe.org/papillon
+# Copyright (c) 2000-2003,2006 Konrad Rieck <kr@roqe.org>
+# All rights reserved.
+#
+# $Id: init.papillon,v 1.7 2003/04/11 09:52:19 kr Exp $
+#
+
+case "$1" in
+'start')
+	BITS=`/usr/bin/isainfo -b`
+	
+	if [ "$BITS" = "32" -a -f /usr/kernel/misc/papillon ] 
+        then
+		echo "Papillon Security Module (32 bit) starting."
+		/usr/sbin/modload /usr/kernel/misc/papillon
+	elif [ "$BITS" = "64" -a -f /usr/kernel/misc/sparcv9/papillon ] 
+        then
+		echo "Papillon Security Module (64 bit) starting."
+		/usr/sbin/modload /usr/kernel/misc/sparcv9/papillon
+	fi	
+
+	;;
+
+'stop')
+	/usr/sbin/papctl -f -s m=off > /dev/null
+	MODID=`/usr/sbin/modinfo | /usr/bin/grep papillon | \
+	      /usr/bin/awk '{ print $1 }'`
+
+	if [ ! -z "$MODID" ] 
+        then
+		echo "Papillon Security Module stopping."
+		/usr/sbin/modunload -i $MODID
+	fi	
+	;;
+*)
+	echo "Usage: $0 { start | stop }"
+	exit 1
+	;;
+esac
+exit 0

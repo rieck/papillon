@@ -1,0 +1,41 @@
+% Layout-unabhängige Definitionen.
+% Konrad Rieck.
+% mydefs.sty,v 2.1 2003/02/17 13:12:57 kr Exp
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{mydefs}[2002/05/10 Layout-unabhängige Definitionen]
+
+\usepackage[english]{babel}	
+\usepackage{isolatin1}		% Eingabe von Umlauten
+\usepackage{latexsym}		% Symbole für GNUPlot
+\usepackage{amsmath}		% Mathe, Mathe, Mathe
+\usepackage{underscore}		% Underscore in URLs
+\usepackage{fancybox}		% Boxen und Rahmen
+\usepackage{graphicx}		% Support für Graphiken
+\usepackage{subfigure}		% Abbildungen in Abbildungen
+\usepackage{multicol}		% Multi-Kolumnen
+\usepackage{verbatim}
+
+\newlength{\mylength}
+\newenvironment{boxit}%
+   {\setlength{\fboxsep}{10pt}
+    \setlength{\mylength}{1.0\linewidth}%
+    \addtolength{\mylength}{-2\fboxsep}%
+    \addtolength{\mylength}{-2\fboxrule}%
+    \Sbox
+    \minipage{\mylength}%
+       \setlength{\abovedisplayskip}{0pt}%
+       \setlength{\belowdisplayskip}{0pt}%
+    }%
+    {\endminipage\endSbox
+     \[\fbox{\TheSbox}\]}
+
+%\fussy
+%\sloppy
+
+\newcommand{\bcode}{\small}
+\newcommand{\ecode}{\normalsize}
+
+\newcommand{\www}[1]{\href{http://#1}{http://#1}}
+\newcommand{\version}{\input{../VERSION}}
+\newcommand{\code}{\tt\small}

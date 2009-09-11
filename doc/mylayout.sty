@@ -1,0 +1,55 @@
+% Layout-spezifische Definitionen. (Grösstenteils von H. Federrath)
+% Konrad Rieck. 
+% mylayout.sty,v 2.1 2003/02/17 13:12:57 kr Exp
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{mylayout}[2002/10/05 Layout-spezifische Definitionen]
+
+\usepackage{a4wide}		% Seitenbreite ist A4
+\usepackage{times}		% Serifenschrift Times und nicht CMR
+\usepackage{sectsty}
+\usepackage{array}		% Fuer Tabellen
+
+\usepackage{color}
+\definecolor{link}{rgb}{0,0,0.7}
+\definecolor{myblue}{rgb}{0.7,0.9,1.0}
+
+\usepackage[colorlinks=true,linkcolor=black,
+            urlcolor=link,citecolor=link,filecolor=link,menucolor=link,
+            pagecolor=link]{hyperref}	
+\usepackage{thumbpdf}
+
+\setlength{\parindent}{0mm}	% Kein Einschub am Absatzanfang
+
+% Zwei Absatzabstände: tocparskip und myparskip
+\newlength{\tocparskip}
+\setlength{\tocparskip}{\parskip}
+\newlength{\myparskip}
+%\setlength{\myparskip}{1.2ex plus 0.5ex minus 0.5ex}
+\setlength{\myparskip}{0pt} 
+\setlength{\parskip}{\myparskip} 
+
+% Serifenlose, fette Überschriften
+\renewcommand{\capfont}{\sffamily\bfseries\small}
+\renewcommand{\caplabelfont}{\sffamily\bfseries\small}
+\renewcommand{\headfont}{\sffamily\bfseries\small}
+\renewcommand{\pnumfont}{\sffamily\bfseries\small}
+\renewcommand{\sectfont}{\sffamily\bfseries}
+
+% Horizontale Linie mit 0.1mm Breite
+\newcommand{\HRule}{\rule{\linewidth}{0.1mm}}
+
+% Auslassen von "underfull vboxes". 
+\vbadness=10000 
+
+% Item soll "-" und nicht der Punkt sein
+\renewcommand{\labelitemi}{--}
+
+% Geraeumige Tabellenhoehe
+\setlength{\extrarowheight}{4pt}
+
+% Inhaltsverzeichnis nur 2 Ebenen tief
+\setcounter{tocdepth}{2}
+
+%\markright{Papillon -- Documentation and Manual}
+%\pagestyle{myheadings}
