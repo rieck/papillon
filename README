@@ -3,6 +3,16 @@
  * Copyright (c) 2000-2003,2006 Konrad Rieck <kr@roqe.org>
  * All rights reserved.
 
+ Papillon is a security module for Solaris (version 8 to 10) and
+ OpenSolaris. The code has been inspired by the Openwall and the HAP
+ Linux Kernel Patches. Papillon implements most mechanisms introduced by
+ these two patches into the Solaris OE and integrates additional
+ security mechanisms into the kernel.
+
+ Papillon includes a restricted proc, several protections against common
+ attack techniques and may operate completely invisibile to system
+ users.
+
  A documentation is available in the doc/ directory:
 
      doc/papillon.pdf		Portable Document (PDF)
